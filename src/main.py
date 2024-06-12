@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 
 app = Flask(__name__)
 
@@ -6,9 +6,19 @@ app = Flask(__name__)
 def landing_page():
     return render_template("landing.html")
 
-@app.route("/signup")
+@app.route("/signup", methods=["GET", "POST"])
 def signup_page():
-    return render_template("signup.html")
+    if request.method == "POST":
+        email = request.form["email"]
+        name = request.form["name"]
+        password = request.form["password"] #TODO: store these fields in a database
+
+        print(f"email: {email}\nname: {name}\npassword: {password}\n")
+        
+        return "<h1>Sign up completed</h1>" #TODO: redirection to homepage for website
+
+    else:
+        return render_template("signup.html")
 
 @app.route("/login")
 def login_page():
