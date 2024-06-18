@@ -1,6 +1,14 @@
-from flask import Flask, render_template, url_for, request
+import database
+
+import hashlib
+import random
+import sys
+
+from flask import Flask, render_template, url_for, request, flash
 
 app = Flask(__name__)
+database.initialise_db()
+app.secret_key = sys.argv[1]
 
 @app.route("/")
 def landing_page():
@@ -9,16 +17,29 @@ def landing_page():
 @app.route("/signup", methods=["GET", "POST"])
 def signup_page():
     if request.method == "POST":
+        hash = hashlib.new("sha512")
+
         email = request.form["email"]
         name = request.form["name"]
-        password = request.form["password"] #TODO: store these fields in a database
+        password = request.form["password"]
 
-        print(f"email: {email}\nname: {name}\npassword: {password}\n")
+        id = random.randint(1000000000, 9999999999)
+        id_check = database.is_id_duplicate(id=id)
+
+        if id_check:
+            id = random.randint(1000000000, 9999999999)
+            id_check = database.is_id_duplicate(id=id)
+            
+        email_check = database.is_email_duplicate(email=email)
         
-        return "<h1>Sign up completed</h1>" #TODO: redirection to homepage for website
+        if email_check:
+            flash("Email is already in use, please use another one!", "error")
+        else:
+            hash.update(password.encode())
+            password = hash.hexdigest()
+            database.write_to_db(id=id, email=email, name=name, password=password)
 
-    else:
-        return render_template("signup.html")
+    return render_template("signup.html")
 
 @app.route("/login")
 def login_page():
