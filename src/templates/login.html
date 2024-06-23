@@ -1,1 +1,31 @@
-<h1>WIP: Login</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/login.css') }}">
+</head>
+<body>
+    <h1>Login</h1>
+    <form class="login-form" method="post">
+        <input type="email" name="email" placeholder="Email" required>
+        {% with messages = get_flashed_messages(category_filter=["email_error"]) %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="flash-message">{{msg}}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <input type="password" name="password" placeholder="Password" required>
+        {% with messages = get_flashed_messages(category_filter=["password_error"]) %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="flash-message">{{msg}}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <button class="btn" type="submit">Login</button>
+    </form>
+</body>
+</html>

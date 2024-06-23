@@ -36,3 +36,23 @@ def is_email_duplicate(email):
         return True
     
     return False
+
+def is_existing_email(email):
+    cursor.execute("""SELECT email FROM accounts WHERE email=?""", (email, ))
+    result = cursor.fetchone()
+
+    if result:
+        return True
+    
+    return False
+
+def get_hashed_password(email):
+    cursor.execute("""SELECT password FROM accounts WHERE email=?""", (email, ))
+    result = cursor.fetchone()
+
+    if result:
+        return result
+    
+    return False
+        
+
