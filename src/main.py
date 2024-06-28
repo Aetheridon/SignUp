@@ -1,4 +1,5 @@
 import database
+import helpers
 
 import hashlib
 import random
@@ -22,22 +23,18 @@ def signup_page():
         name = request.form["name"]
         password = request.form["password"]
 
-        id = random.randint(1000000000, 9999999999)
-        id_check = database.is_id_duplicate(id=id)
-
-        if id_check:
-            id = random.randint(1000000000, 9999999999)
-            id_check = database.is_id_duplicate(id=id)
-            
+        id = helpers.generate_id()
         email_check = database.is_email_duplicate(email=email)
         
         if email_check:
             flash("Email is already in use, please use another one!", "error")
+
         else:
-            hash = hashlib.new("sha512")
-            hash.update(password.encode())
-            password = hash.hexdigest()
-            database.write_to_db(id=id, email=email, name=name, password=password)
+            password = helpers.hash(password)
+            write_to_db_status = database.write_to_db(id=id, email=email, name=name, password=password)
+
+            if isinstance(write_to_db_status, Exception):
+                flash(f"Error whilst creating account: {write_to_db_status}", "error")
 
     return render_template("signup.html")
 
@@ -51,9 +48,7 @@ def login_page():
             hashed_account_password = database.get_hashed_password(email=email) # Returns a tuple
             
             if hashed_account_password:
-                hash = hashlib.new("sha512")
-                hash.update(password.encode())
-                password = hash.hexdigest()
+                password = helpers.hash(password)
 
                 if password == hashed_account_password[0]:
                     print("Successful login!") #TODO: work on redirection to dashboard
