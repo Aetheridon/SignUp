@@ -9,7 +9,7 @@ def initialise_db():
     
     if not res.fetchone(): # checks for existing D.B, if not we create the D.B and Table
         try:
-            cursor.execute("CREATE TABLE accounts(id, email, name, password)")\
+            cursor.execute("CREATE TABLE accounts(id, email, name, password)")
             
         except Exception as e:
             print(f"encountered err trying to initialise database\nErr: {e}")
