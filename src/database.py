@@ -5,41 +5,19 @@ connection = sqlite3.connect("user-accounts.db", check_same_thread=False)
 cursor = connection.cursor()
 
 def initialise_db():
-    res = cursor.execute("SELECT name FROM sqlite_master")
-    
-    if not res.fetchone(): # checks for existing D.B, if not we create the D.B and Table
-        try:
-            cursor.execute("CREATE TABLE accounts(id, email, name, password)")
-            
-        except Exception as e:
-            print(f"encountered err trying to initialise database\nErr: {e}")
-            sys.exit()
-
-def write_to_db(id: int, email: str, name: str, password: str):
     try:
-        cursor.execute("INSERT INTO accounts (id, email, name, password) VALUES (?, ?, ?, ?)", (id, email, name, password))
+        cursor.execute("CREATE TABLE IF NOT EXISTS accounts(id integer primary key autoincrement, email, name, password)")
+    except Exception as e: 
+        print(f"Failed to initialise table, got error: {e}")
+        sys.exit()
+
+def write_to_db(email: str, name: str, password: str):
+    try:
+        cursor.execute("INSERT INTO accounts (email, name, password) VALUES (?, ?, ?)", (email, name, password))
         connection.commit()
 
     except Exception as e:
         return e
-
-def is_id_duplicate(id):
-    cursor.execute("""SELECT id FROM accounts WHERE id=?""", (id, ))
-    result = cursor.fetchone()
-    
-    if result:
-        return True
-    
-    return False
-
-def is_email_duplicate(email):
-    cursor.execute("""SELECT email FROM accounts WHERE email=?""", (email, ))
-    result = cursor.fetchone()
-
-    if result:
-        return True
-    
-    return False
 
 def is_existing_email(email):
     cursor.execute("""SELECT email FROM accounts WHERE email=?""", (email, ))

@@ -1,8 +1,6 @@
 import database
 import helpers
 
-import hashlib
-import random
 import sys
 
 from flask import Flask, render_template, url_for, request, flash
@@ -23,15 +21,14 @@ def signup_page():
         name = request.form["name"]
         password = request.form["password"]
 
-        id = helpers.generate_id()
-        email_check = database.is_email_duplicate(email=email)
+        email_check = database.is_existing_email(email=email)
         
         if email_check:
             flash("Email is already in use, please use another one!", "error")
 
         else:
             password = helpers.hash(password)
-            write_to_db_status = database.write_to_db(id=id, email=email, name=name, password=password)
+            write_to_db_status = database.write_to_db(email=email, name=name, password=password)
 
             if isinstance(write_to_db_status, Exception):
                 flash(f"Error whilst creating account: {write_to_db_status}", "error")
@@ -57,7 +54,7 @@ def login_page():
                     flash("Incorrect password!", "password_error")
 
         else:
-            flash("Email does not exist in database!", "email_error")
+            flash("Email does not exist!", "email_error")
 
     return render_template("login.html")
 
