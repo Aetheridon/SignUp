@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Events</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/view_events.css') }}">
+</head>
+<body>
+    <h1>Your Events</h1>
+    {% if events %}
+        <div class="events-container">
+            {% for event in events %}
+                <div class="event-card">
+                    <h2>{{ event[1] }}</h2>
+                    <p><strong>Start:</strong> {{ event[2] }}</p>
+                    <p><strong>End:</strong> {{ event[3] }}</p>
+                    <p><strong>Location:</strong> {{ event[6] }}</p>
+                    <p><strong>Primary List:</strong> {{ event[4] }}</p>
+                    <p><strong>Reserve List:</strong> {{ event[5] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No events found.</p>
+    {% endif %}
+</body>
+</html>

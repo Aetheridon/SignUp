@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/create_event.css') }}">
+</head>
+<body>
+    <h1>Create an Event</h1>
+    <form class="event-form" method="post">
+        <input type="text" name="event_name" placeholder="Event Name" required>
+        <input type="datetime-local" name="start_datetime" placeholder="Start Date and Time" required>
+        <input type="datetime-local" name="end_datetime" placeholder="End Date and Time" required>
+        <input type="number" name="primary_list" placeholder="Primary List Capacity" required>
+        <input type="number" name="reserve_list" placeholder="Reserve List Capacity" required>
+        <input type="text" name="location" placeholder="Event Address and Location" required>
+        <button class="btn" type="submit">Create Event</button>
+    </form>
+</body>
+</html>

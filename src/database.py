@@ -29,12 +29,37 @@ def is_existing_email(email):
     return False
 
 def get_hashed_password(email):
-    cursor.execute("""SELECT password FROM accounts WHERE email=?""", (email, ))
-    result = cursor.fetchone()
+    try:
+        cursor.execute("""SELECT password FROM accounts WHERE email=?""", (email, ))
+        result = cursor.fetchone()
 
-    if result:
-        return result
-    
-    return False
+        if result:
+            return result
         
+    except Exception as e:
+        print("got errror whilst trying to fetch hashed password: {e}")
+        return None
+            
+def get_name(email):
+    try:
+        cursor.execute("""SELECT name FROM accounts WHERE email=?""", (email, ))
+        result = cursor.fetchone()
 
+        if result:
+            return result
+        
+    except Exception as e:
+        print(f"got error fetching name: {e}")
+        return None
+
+def get_id(email):
+    try:
+        cursor.execute("""SELECT id FROM accounts WHERE email=?""", (email, ))
+        result = cursor.fetchone()
+
+        if result:
+            return result
+    
+    except Exception as e:
+        print("got error fetching I.D: {e}")
+        return None

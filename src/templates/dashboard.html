@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ name }}!</h1>
+    <div class="buttons-container">
+        <a class="btn" href="{{ url_for('create_event') }}">Create an Event</a>
+        <a class="btn" href="{{ url_for('view_events') }}">View Existing Events</a>
+    </div>
+</body>
+</html>
