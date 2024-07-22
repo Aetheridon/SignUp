@@ -21,22 +21,21 @@ def signup_page():
         email = request.form["email"]
         name = request.form["name"]
         password = request.form["password"]
-
-        email_check = database.is_existing_email(email=email)
         
-        if email_check:
+        if database.is_existing_email(email=email):
             flash("Email is already in use, please use another one!", "error")
 
         else:
-            password = helpers.hash(password)
-            write_to_db_status = database.write_to_db(email=email, name=name, password=password)
+            write_to_db_status = database.write_to_db(email=email, name=name, password=helpers.hash(password))
 
-            if isinstance(write_to_db_status, Exception):
+            if isinstance(write_to_db_status, Exception): # Checks if write_to_db_status threw an exception
                 flash(f"Error whilst creating account: {write_to_db_status}", "error")
 
-        helpers.store_id(email=email)
+            else:
+                helpers.store_id(email=email) 
 
-        return redirect(url_for("dashboard", name=name[0]))
+                return redirect(url_for("dashboard", name=name))
+        
     return render_template("signup.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -55,13 +54,13 @@ def login_page():
                     print("Successful login!") #TODO: work on redirection to dashboard, some type of session checking
 
                     name = database.get_name(email=email)
+
                     if not name:
-                        print("Unable to get name")
-                        sys.exit()
+                        name = "<Unknown>"
 
                     helpers.store_id(email=email)
                     
-                    return redirect(url_for("dashboard", name=name[0])) #TODO: bug with how the name is displayed
+                    return redirect(url_for("dashboard", name=name[0]))
 
                 else:
                     flash("Incorrect password!", "password_error")
