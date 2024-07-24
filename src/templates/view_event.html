@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ event[1] }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/view_event.css') }}">
+</head>
+<body>
+    <h1>{{ event[1] }}</h1>
+    <p><strong>Start Date and Time:</strong> {{ event[2] }}</p>
+    <p><strong>End Date and Time:</strong> {{ event[3] }}</p>
+    <p><strong>Primary List Capacity:</strong> {{ primary_list_count }}/{{ event[4] }}</p>
+    <p><strong>Reserve List Capacity:</strong> {{ reserve_list_count }}/{{ event[5] }}</p>
+    <p><strong>Location:</strong> {{ event[6] }}</p>
+    
+    {% if primary_list_count < event[4] %}
+        <form action="{{ url_for('sign_up_primary', event_id=event[0]) }}" method="post">
+            <button type="submit">Sign up for primary list</button>
+        </form>
+    {% else %}
+        <button disabled>Sign up for primary list (full)</button>
+        {% if reserve_list_count < event[5] %}
+            <form action="{{ url_for('sign_up_reserve', event_id=event[0]) }}" method="post">
+                <button type="submit">Sign up for reserve list</button>
+            </form>
+        {% else %}
+            <button disabled>Sign up for reserve list (full)</button>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
