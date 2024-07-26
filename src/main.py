@@ -1,17 +1,26 @@
+import sys
+import argparse
+
+parser = argparse.ArgumentParser(description="requires a secret key and a port number.")
+parser.add_argument("secret_key", type=str, help="The secret key for the application.")
+parser.add_argument("port", type=int, help="The port number for the application. Must be between 0 and 65535.")
+args = parser.parse_args()
+
+if args.port < 0 or args.port > 65535:
+    print("Invalid port range, ports must be between 0 - 65535")
+    sys.exit(1)
+
 import database
 import helpers
 import events_db
 
-import sys
-
 from flask import Flask, render_template, url_for, request, flash, redirect, session
 
 app = Flask(__name__)
+app.secret_key = sys.argv[1]
 
 database.initialise_db()
 events_db.initialise_events()
-
-app.secret_key = sys.argv[1]
 
 @app.route("/")
 def landing_page():
@@ -167,4 +176,7 @@ def about_page():
     return render_template("about.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    try:
+        app.run(debug=True, port=args.port)
+    except Exception as e:
+        print(f"Error trying to deploy webserver, possible issue with binding to port {args.port}?\nmake sure port is not in use\n")
