@@ -17,7 +17,7 @@ import events_db
 from flask import Flask, render_template, url_for, request, flash, redirect, session
 
 app = Flask(__name__)
-app.secret_key = sys.argv[1]
+app.secret_key = args.secret_key
 
 database.initialise_db()
 events_db.initialise_events()
