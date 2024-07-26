@@ -51,7 +51,7 @@ Welcome to **SignUp**. The minimalist website designed for event management. The
 
 5. Now, run the main Flask application:
    ```sh
-   python3 src/main.py
+   python3 src/main.py <secret_key> <port>
    ```
   
-  and the website should be avaliable locally at [127.0.0.1:5000](http://127.0.0.1:5000/)
+  and the website should be avaliable locally at 127.0.0.1:PORT
